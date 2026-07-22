@@ -1,19 +1,33 @@
 <template>
-	<div class="flex flex-col bg-white rounded w-full py-6 px-4 border-none">
-		<h2 class="text-lg font-bold text-gray-900">
-			{{ __("Hey, {0} 👋", [employee?.data?.first_name]) }}
-		</h2>
+	<div class="flex flex-col bg-white rounded-lg w-full py-5 px-4 border border-gray-100 shadow-sm">
+		<div class="flex items-center gap-3">
+			<div
+				class="w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm shrink-0"
+				style="background-color: #0B2545"
+			>
+				{{ employee?.data?.first_name?.[0] }}
+			</div>
+			<div>
+				<h2 class="text-base font-bold text-gray-900 leading-tight">
+					{{ __("Hey, {0} 👋", [employee?.data?.first_name]) }}
+				</h2>
+				<div class="font-medium text-xs text-gray-500 mt-0.5" v-if="lastLog">
+					<span>{{ __("Last {0} was at {1}", [__(lastLogType), formatTimestamp(lastLog.time)]) }}</span>
+					<span class="whitespace-pre"> &middot; </span>
+					<router-link :to="{ name: 'EmployeeCheckinListView' }" v-slot="{ navigate }">
+						<span @click="navigate" class="underline" style="color: #0B2545">View List</span>
+					</router-link>
+				</div>
+				<div v-else class="font-medium text-xs text-gray-500 mt-0.5">
+					{{ dayjs().format("ddd, D MMMM, YYYY") }}
+				</div>
+			</div>
+		</div>
 
 		<template v-if="settings.data?.allow_employee_checkin_from_mobile_app">
-			<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
-				<span>{{ __("Last {0} was at {1}", [__(lastLogType), formatTimestamp(lastLog.time)]) }}</span>
-				<span class="whitespace-pre"> &middot; </span>
-				<router-link :to="{ name: 'EmployeeCheckinListView' }" v-slot="{ navigate }">
-					<span @click="navigate" class="underline">View List</span>
-				</router-link>
-			</div>
 			<Button
-				class="mt-4 mb-1 drop-shadow-sm py-5 text-base"
+				class="mt-4 py-5 text-base text-white border-none"
+				style="background-color: #0B2545"
 				id="open-checkin-modal"
 				@click="handleEmployeeCheckin"
 			>
@@ -26,10 +40,6 @@
 				{{ nextAction.label }}
 			</Button>
 		</template>
-
-		<div v-else class="font-medium text-sm text-gray-500 mt-1.5">
-			{{ dayjs().format("ddd, D MMMM, YYYY") }}
-		</div>
 	</div>
 
 	<ion-modal
@@ -39,24 +49,30 @@
 		:initial-breakpoint="1"
 		:breakpoints="[0, 1]"
 	>
-		<div class="h-120 w-full flex flex-col items-center justify-center gap-5 p-4 mb-5">
-			<div class="flex flex-col gap-1.5 mt-2 items-center justify-center">
-				<div class="font-bold text-xl">
+		<div class="w-full flex flex-col items-center gap-5 p-5 pb-6 relative">
+    <button
+        class="absolute top-0 right-2 w-8 h-8 rounded-full flex items-center justify-center bg-gray-100 text-gray-600"
+        @click="cancelCheckin"
+    >
+        <FeatherIcon name="x" class="w-4" />
+    </button>
+			<div class="w-full rounded-lg py-3 px-4 flex flex-col items-center" style="background-color: #0B2545">
+				<div class="font-bold text-2xl text-white tracking-wide">
 					{{ dayjs(checkinTimestamp).format("hh:mm:ss a") }}
 				</div>
-				<div class="font-medium text-gray-500 text-sm">
+				<div class="font-medium text-gray-300 text-xs mt-0.5">
 					{{ dayjs().format("D MMM, YYYY") }}
 				</div>
 			</div>
 
 			<template v-if="settings.data?.allow_geolocation_tracking">
-				<span v-if="locationStatus" class="font-medium text-gray-500 text-sm">
+				<span v-if="locationStatus" class="font-medium text-gray-500 text-xs -mb-2">
 					{{ locationStatus }}
 				</span>
-				<div class="rounded border-4 translate-z-0 block overflow-hidden w-full h-170">
+				<div class="rounded-lg border translate-z-0 block overflow-hidden w-full" style="border-color: #0B2545">
 					<iframe
 						width="100%"
-						height="170"
+						height="150"
 						frameborder="0"
 						scrolling="no"
 						marginheight="0"
@@ -69,34 +85,58 @@
 			</template>
 
 			<!-- ======= PHOTO STEP ======= -->
-			<div class="w-full flex flex-col gap-3">
-				<div v-if="photoStep === 'capture'" class="w-full flex flex-col gap-3">
-					<video
-						ref="videoEl"
-						autoplay
-						playsinline
-						muted
-						class="w-full rounded-lg object-cover"
-						style="max-height: 220px"
-					></video>
+			<div class="w-full flex flex-col items-center gap-3">
+				<div v-if="photoStep === 'capture'" class="w-full flex flex-col items-center gap-3">
+					<div
+						class="relative w-48 h-48 rounded-full overflow-hidden border-4 flex items-center justify-center bg-gray-900"
+						style="border-color: #0B2545"
+					>
+						<video
+							ref="videoEl"
+							autoplay
+							playsinline
+							muted
+							class="w-full h-full object-cover"
+						></video>
+					</div>
+					<p class="text-gray-500 text-xs text-center">{{ __("Center your face in the frame") }}</p>
 					<p v-if="cameraError" class="text-red-500 text-sm text-center">{{ cameraError }}</p>
-					<Button variant="solid" class="w-full py-5 text-sm" @click="capturePhoto">
+					<Button
+						variant="solid"
+						class="w-full py-5 text-sm text-white border-none"
+						style="background-color: #0B2545"
+						@click="capturePhoto"
+					>
 						<template #prefix><FeatherIcon name="camera" class="w-4" /></template>
 						{{ __("Take Photo") }}
 					</Button>
 				</div>
 
-				<div v-else-if="photoStep === 'preview'" class="w-full flex flex-col gap-3">
-					<img :src="photoDataUrl" class="w-full rounded-lg object-cover" style="max-height: 220px" />
-					<div class="flex gap-2">
-						<Button variant="outline" class="flex-1 py-5 text-sm" @click="retakePhoto">
+				<div v-else-if="photoStep === 'preview'" class="w-full flex flex-col items-center gap-3">
+					<div class="relative w-48 h-48 rounded-full overflow-hidden border-4" style="border-color: #0B2545">
+						<img :src="photoDataUrl" class="w-full h-full object-cover" />
+						<div
+							class="absolute bottom-1 right-1 w-7 h-7 rounded-full flex items-center justify-center text-white"
+							style="background-color: #16a34a"
+						>
+							<FeatherIcon name="check" class="w-4" />
+						</div>
+					</div>
+					<div class="flex gap-2 w-full">
+						<Button
+							variant="outline"
+							class="flex-1 py-5 text-sm"
+							style="border-color: #0B2545; color: #0B2545"
+							@click="retakePhoto"
+						>
 							<template #prefix><FeatherIcon name="refresh-cw" class="w-4" /></template>
 							{{ __("Retake") }}
 						</Button>
 						<Button
 							:loading="checkins.insert.loading"
 							variant="solid"
-							class="flex-1 py-5 text-sm"
+							class="flex-1 py-5 text-sm text-white border-none"
+							style="background-color: #0B2545"
 							@click="submitLog(nextAction.action)"
 						>
 							{{ __("Confirm {0}", [nextAction.label]) }}
@@ -216,6 +256,13 @@ function stopCamera() {
 		stream.getTracks().forEach((t) => t.stop())
 		stream = null
 	}
+}
+
+function cancelCheckin() {
+    stopCamera()
+    photoStep.value = "capture"
+    photoDataUrl.value = null
+    modalController.dismiss()
 }
 
 function capturePhoto() {
