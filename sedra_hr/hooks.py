@@ -1,258 +1,36 @@
 app_name = "sedra_hr"
 app_title = "Sedra HR"
-app_publisher = "Sedra Real Estate"
-app_description = "Custom HR modifications and enhancements for sedra real estate"
+app_publisher = "Mahmoud Tawfeek"
+app_description = "Sedra HR customizations"
 app_email = "mahmoudtawfeek815@gmail.com"
 app_license = "mit"
 
-# Apps
-# ------------------
+fixtures = [
+    {
+        "dt": "Custom Field",
+        "filters": [
+            [
+                "name",
+                "in",
+                [
+                    "HR Settings-require_employee_checkin_photo",
+                    "Employee Checkin-custom_employee_photo"
+                ]
+            ]
+        ]
+    }
+]
 
-# required_apps = []
+doc_events = {
+    "Employee Checkin": {
+        "before_insert": "sedra_hr.sedra_hr.checkin_validation.validate_checkin"
+    }
+}
 
-# Each item in the list will be shown as an app in the apps page
-# add_to_apps_screen = [
-# 	{
-# 		"name": "sedra_hr",
-# 		"logo": "/assets/sedra_hr/logo.png",
-# 		"title": "Sedra HR",
-# 		"route": "/sedra_hr",
-# 		"has_permission": "sedra_hr.api.permission.has_app_permission"
-# 	}
-# ]
+doctype_list_js = {
+    "Employee Checkin": "public/js/employee_checkin_list.js"
+}
 
-# Includes in <head>
-# ------------------
-
-# include js, css files in header of desk.html
-# app_include_css = "/assets/sedra_hr/css/sedra_hr.css"
-# app_include_js = "/assets/sedra_hr/js/sedra_hr.js"
-
-# include js, css files in header of web template
-# web_include_css = "/assets/sedra_hr/css/sedra_hr.css"
-# web_include_js = "/assets/sedra_hr/js/sedra_hr.js"
-
-# include custom scss in every website theme (without file extension ".scss")
-# website_theme_scss = "sedra_hr/public/scss/website"
-
-# include js, css files in header of web form
-# webform_include_js = {"doctype": "public/js/doctype.js"}
-# webform_include_css = {"doctype": "public/css/doctype.css"}
-
-# include js in page
-# page_js = {"page" : "public/js/file.js"}
-
-# include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
-# doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
-# doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
-# doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
-
-# Svg Icons
-# ------------------
-# include app icons in desk
-# app_include_icons = "sedra_hr/public/icons.svg"
-
-# Home Pages
-# ----------
-
-# application home page (will override Website Settings)
-# home_page = "login"
-
-# website user home page (by Role)
-# role_home_page = {
-# 	"Role": "home_page"
-# }
-
-# Generators
-# ----------
-
-# automatically create page for each record of this doctype
-# website_generators = ["Web Page"]
-
-# automatically load and sync documents of this doctype from downstream apps
-# importable_doctypes = [doctype_1]
-
-# Jinja
-# ----------
-
-# add methods and filters to jinja environment
-# jinja = {
-# 	"methods": "sedra_hr.utils.jinja_methods",
-# 	"filters": "sedra_hr.utils.jinja_filters"
-# }
-
-# Installation
-# ------------
-
-# before_install = "sedra_hr.install.before_install"
-# after_install = "sedra_hr.install.after_install"
-
-# Uninstallation
-# ------------
-
-# before_uninstall = "sedra_hr.uninstall.before_uninstall"
-# after_uninstall = "sedra_hr.uninstall.after_uninstall"
-
-# Integration Setup
-# ------------------
-# To set up dependencies/integrations with other apps
-# Name of the app being installed is passed as an argument
-
-# before_app_install = "sedra_hr.utils.before_app_install"
-# after_app_install = "sedra_hr.utils.after_app_install"
-
-# Integration Cleanup
-# -------------------
-# To clean up dependencies/integrations with other apps
-# Name of the app being uninstalled is passed as an argument
-
-# before_app_uninstall = "sedra_hr.utils.before_app_uninstall"
-# after_app_uninstall = "sedra_hr.utils.after_app_uninstall"
-
-# Build
-# ------------------
-# To hook into the build process
-
-# after_build = "sedra_hr.build.after_build"
-
-# Desk Notifications
-# ------------------
-# See frappe.core.notifications.get_notification_config
-
-# notification_config = "sedra_hr.notifications.get_notification_config"
-
-# Permissions
-# -----------
-# Permissions evaluated in scripted ways
-
-# permission_query_conditions = {
-# 	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
-# }
-#
-# has_permission = {
-# 	"Event": "frappe.desk.doctype.event.event.has_permission",
-# }
-
-# Document Events
-# ---------------
-# Hook on document methods and events
-
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
-
-# Scheduled Tasks
-# ---------------
-
-# scheduler_events = {
-# 	"all": [
-# 		"sedra_hr.tasks.all"
-# 	],
-# 	"daily": [
-# 		"sedra_hr.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"sedra_hr.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"sedra_hr.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"sedra_hr.tasks.monthly"
-# 	],
-# }
-
-# Testing
-# -------
-
-# before_tests = "sedra_hr.install.before_tests"
-
-# Extend DocType Class
-# ------------------------------
-#
-# Specify custom mixins to extend the standard doctype controller.
-# extend_doctype_class = {
-# 	"Task": "sedra_hr.custom.task.CustomTaskMixin"
-# }
-
-# Overriding Methods
-# ------------------------------
-#
-# override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "sedra_hr.event.get_events"
-# }
-#
-# each overriding function accepts a `data` argument;
-# generated from the base implementation of the doctype dashboard,
-# along with any modifications made in other Frappe apps
-# override_doctype_dashboards = {
-# 	"Task": "sedra_hr.task.get_dashboard_data"
-# }
-
-# exempt linked doctypes from being automatically cancelled
-#
-# auto_cancel_exempted_doctypes = ["Auto Repeat"]
-
-# Ignore links to specified DocTypes when deleting documents
-# -----------------------------------------------------------
-
-# ignore_links_on_delete = ["Communication", "ToDo"]
-
-# Request Events
-# ----------------
-# before_request = ["sedra_hr.utils.before_request"]
-# after_request = ["sedra_hr.utils.after_request"]
-
-# Job Events
-# ----------
-# before_job = ["sedra_hr.utils.before_job"]
-# after_job = ["sedra_hr.utils.after_job"]
-
-# User Data Protection
-# --------------------
-
-# user_data_fields = [
-# 	{
-# 		"doctype": "{doctype_1}",
-# 		"filter_by": "{filter_by}",
-# 		"redact_fields": ["{field_1}", "{field_2}"],
-# 		"partial": 1,
-# 	},
-# 	{
-# 		"doctype": "{doctype_2}",
-# 		"filter_by": "{filter_by}",
-# 		"partial": 1,
-# 	},
-# 	{
-# 		"doctype": "{doctype_3}",
-# 		"strict": False,
-# 	},
-# 	{
-# 		"doctype": "{doctype_4}"
-# 	}
-# ]
-
-# Authentication and authorization
-# --------------------------------
-
-# auth_hooks = [
-# 	"sedra_hr.auth.validate"
-# ]
-
-# Automatically update python controller files with type annotations for this app.
-# export_python_type_annotations = True
-
-# default_log_clearing_doctypes = {
-# 	"Logging DocType Name": 30  # days to retain logs
-# }
-
-# Translation
-# ------------
-# List of apps whose translatable strings should be excluded from this app's translations.
-# ignore_translatable_strings_from = []
-
+doctype_js = {
+    "Employee Checkin": "public/js/employee_checkin.js"
+}
